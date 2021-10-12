@@ -1,5 +1,8 @@
 /node_modules/
 /public/build/
 /Lamoda source/
+/catalog.html
+
 
 .DS_Store
+
