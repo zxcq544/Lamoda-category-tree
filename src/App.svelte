@@ -21,19 +21,28 @@
     import { onMount } from "svelte";
 
     let boots;
+    let boots_inner;
     let is_expanded = false;
-    let height_of_menu = 10;
+    let is_expanded_inner = false;
+    let height_of_menu = 0;
+    let height_of_menu_inner = 0;
     let before_and_after_menu_calc = "initial";
+    let before_and_after_menu_calc_inner = "initial";
     onMount(() => {
         height_of_menu = window.getComputedStyle(boots).height;
+        height_of_menu_inner = window.getComputedStyle(boots_inner).height;
         console.log(boots);
         console.log(height_of_menu);
         console.log(before_and_after_menu_calc);
         before_and_after_menu_calc = 0;
+        before_and_after_menu_calc_inner = 0;
         console.log(before_and_after_menu_calc);
     });
     function expand_menu() {
         is_expanded = !is_expanded;
+    }
+    function expand_menu_inner() {
+        is_expanded_inner = !is_expanded_inner;
     }
 </script>
 
@@ -57,10 +66,17 @@
                     class:is_expanded
                     style="--before_and_after_menu_calc:{before_and_after_menu_calc}"
                 >
-                    <li class="cat-nav-item">
-                        Ботинки
-
-                        <ul class="cat-nav cat-nav-sub">
+                    <li
+                        class="cat-nav-item"
+                        style="--height_of_menu_inner:{height_of_menu_inner}"
+                    >
+                        <span on:click={expand_menu_inner}> Ботинки </span>
+                        <ul
+                            class="cat-nav cat-nav-sub to_expand_inner"
+                            class:is_expanded_inner
+                            bind:this={boots_inner}
+                            style="--before_and_after_menu_calc_inner:{before_and_after_menu_calc_inner}"
+                        >
                             <li class="cat-nav-item">Высокие ботинки</li>
                             <li class="cat-nav-item">Низкие ботинки</li>
                             <li class="cat-nav-item">Дезерты</li>
@@ -107,5 +123,15 @@
     }
     .is_expanded {
         max-height: var(--height_of_menu);
+    }
+
+    .to_expand_inner {
+        overflow: hidden;
+        max-height: var(--before_and_after_menu_calc_inner);
+        transition: max-height 0.7s ease-in;
+    }
+
+    .is_expanded_inner {
+        max-height: var(--height_of_menu_inner);
     }
 </style>
