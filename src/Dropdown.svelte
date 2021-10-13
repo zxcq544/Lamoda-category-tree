@@ -1,4 +1,5 @@
 <script>
+    //TODO: Recursively draw menu one in one
     import { onMount } from "svelte";
     let menu;
     let wrapper;
