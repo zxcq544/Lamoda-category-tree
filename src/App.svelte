@@ -29,7 +29,9 @@
     let before_and_after_menu_calc = "initial";
     let before_and_after_menu_calc_inner = "initial";
     onMount(() => {
+        before_and_after_menu_calc_inner = 0;
         height_of_menu = window.getComputedStyle(boots).height;
+        before_and_after_menu_calc_inner = "initial";
         height_of_menu_inner = window.getComputedStyle(boots_inner).height;
         console.log(boots);
         console.log(height_of_menu);
@@ -67,6 +69,7 @@
                     style="--before_and_after_menu_calc:{before_and_after_menu_calc}"
                 >
                     <li
+                        id="height_info"
                         class="cat-nav-item"
                         style="--height_of_menu_inner:{height_of_menu_inner}"
                     >
@@ -119,7 +122,7 @@
     .to_expand {
         overflow: hidden;
         max-height: var(--before_and_after_menu_calc);
-        transition: max-height 0.7s ease-in;
+        transition: max-height 0.4s ease-in;
     }
     .is_expanded {
         max-height: var(--height_of_menu);
@@ -128,7 +131,7 @@
     .to_expand_inner {
         overflow: hidden;
         max-height: var(--before_and_after_menu_calc_inner);
-        transition: max-height 0.7s ease-in;
+        transition: max-height 0.4s ease-in;
     }
 
     .is_expanded_inner {
