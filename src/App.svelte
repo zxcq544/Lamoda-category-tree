@@ -1,6 +1,6 @@
 <script>
     import Menu from "./Menu.svelte";
-    let menu_items = [
+    let menu = [
         {
             name: "First",
             children: [
@@ -41,15 +41,42 @@
             children: [
                 {
                     name: "Inner First",
-                    children: [],
+                    children: [
+                        {
+                            name: "Inner Inner First",
+                            children: [],
+                        },
+                        {
+                            name: "Inner Inner Second",
+                            children: [],
+                        },
+                    ],
                 },
                 {
                     name: "Inner Second",
-                    children: [],
+                    children: [
+                        {
+                            name: "Inner Inner First",
+                            children: [],
+                        },
+                        {
+                            name: "Inner Inner Second",
+                            children: [],
+                        },
+                    ],
                 },
                 {
                     name: "Inner Third",
-                    children: [],
+                    children: [
+                        {
+                            name: "Inner Inner First",
+                            children: [],
+                        },
+                        {
+                            name: "Inner Inner Second",
+                            children: [],
+                        },
+                    ],
                 },
             ],
         },
@@ -77,4 +104,4 @@
     ];
 </script>
 
-<Menu {menu_items} />
+<Menu {menu} />
