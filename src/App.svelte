@@ -1,5 +1,6 @@
 <script>
     import Menu from "./Menu.svelte";
+    //Only 3 level menu is supported
     let menu = [
         {
             name: "First",
