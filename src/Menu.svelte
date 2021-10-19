@@ -7,9 +7,11 @@
 
     onMount(() => {
         for (let i = 0; i < menu.length; i++) {
-            menu_items_height["id" + i] = document.getElementById("id" + i).clientHeight;
+            menu_items_height["id" + "-" + i] = document.getElementById("id" + "-" + i).clientHeight;
             for (let j = 0; j < menu[i].children.length; j++) {
-                menu_items_height["id" + i + "" + j] = document.getElementById("id" + i + "" + j).clientHeight;
+                menu_items_height["id" + "-" + i + "-" + j] = document.getElementById(
+                    "id" + "-" + i + "-" + j
+                ).clientHeight;
             }
         }
         menu_items_height_original = JSON.parse(JSON.stringify(menu_items_height));
@@ -26,7 +28,7 @@
     }
     function collapse_second_level(ev) {
         let index = ev.target.dataset.index;
-        let index_top_level = ev.target.dataset.index.slice(0, -1);
+        let index_top_level = ev.target.dataset.parent_index;
         if (menu_items_height[index] == 0) {
             menu_items_height[index] = menu_items_height_original[index];
             menu_items_height[index_top_level] += menu_items_height_original[index];
@@ -42,22 +44,23 @@
 <ul>
     {#each menu as menu_top_level, menu_top_level_index}
         <li>
-            <span data-index="id{menu_top_level_index}" on:click={collapse_top_level}>{menu_top_level.name}</span>
-            <ul id="id{menu_top_level_index}" style="height:{menu_items_height['id' + menu_top_level_index]}px">
+            <span data-index="id-{menu_top_level_index}" on:click={collapse_top_level}>{menu_top_level.name}</span>
+            <ul id="id-{menu_top_level_index}" style="height:{menu_items_height['id' + '-' + menu_top_level_index]}px">
                 {#each menu_top_level.children as menu_second_level, menu_second_level_index}
                     <li>
                         <span
-                            data-index="id{menu_top_level_index}{menu_second_level_index}"
+                            data-index="id-{menu_top_level_index}-{menu_second_level_index}"
+                            data-parent_index="id-{menu_top_level_index}"
                             on:click={collapse_second_level}>{menu_second_level.name}</span
                         >
                         <ul
-                            id="id{menu_top_level_index}{menu_second_level_index}"
+                            id="id-{menu_top_level_index}-{menu_second_level_index}"
                             style="height:{menu_items_height[
-                                'id' + menu_top_level_index + '' + menu_second_level_index
+                                'id' + '-' + menu_top_level_index + '-' + menu_second_level_index
                             ]}px"
                         >
                             {#each menu_second_level.children as menu_third_level, menu_third_level_index}
-                                <li id="id{menu_top_level_index}{menu_second_level_index}{menu_third_level_index}">
+                                <li id="id-{menu_top_level_index}-{menu_second_level_index}-{menu_third_level_index}">
                                     <span>{menu_third_level.name}</span>
                                 </li>
                             {/each}
