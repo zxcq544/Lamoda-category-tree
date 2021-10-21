@@ -14,9 +14,10 @@
                 ).clientHeight;
             }
         }
-        menu_items_height_original = JSON.parse(JSON.stringify(menu_items_height));
+        //make copy of menu_items_height for use as element height when open
+        menu_items_height_original = Object.assign({}, menu_items_height);
         // console.log(menu);
-        // console.log(menu_items_height);
+        // console.log(menu_items_height_original);
     });
     function collapse_top_level(ev) {
         let index = ev.target.dataset.index;
