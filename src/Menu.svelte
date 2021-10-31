@@ -2,56 +2,43 @@
     import { onMount } from "svelte";
 
     export let menu;
-    let menu_items_height = {};
-    let menu_items_height_original;
-    let menu_items_is_open = {};
 
     onMount(() => {
         for (let i = 0; i < menu.length; i++) {
-            menu_items_height["id" + "-" + i] = document.getElementById("id" + "-" + i).clientHeight;
-            menu_items_is_open["id" + "-" + i] = true;
+            menu[i].height = document.getElementById("id" + "-" + i).clientHeight;
+            menu[i].previous_height = menu[i].height;
+            menu[i].is_open = true;
             for (let j = 0; j < menu[i].children.length; j++) {
-                menu_items_height["id" + "-" + i + "-" + j] = document.getElementById(
-                    "id" + "-" + i + "-" + j
-                ).clientHeight;
-                menu_items_is_open["id" + "-" + i + "-" + j] = true;
+                menu[i].children[j].height = document.getElementById("id-" + i + "-" + j).clientHeight;
+                menu[i].children[j].previous_height = menu[i].children[j].height;
+                menu[i].children[j].is_open = true;
             }
         }
-        //make copy of menu_items_height for use as element height when open
-        menu_items_height_original = Object.assign({}, menu_items_height);
-        // console.log(menu);
-        // console.log(menu_items_height_original);
-        console.log(menu_items_is_open);
-        menu_items_height["id-1"] = 0;
-        menu_items_is_open["id-1"] = false;
+        console.log(menu);
     });
     function collapse_top_level(ev) {
-        let index = ev.target.dataset.index;
-        if (menu_items_height[index] == 0) {
-            menu_items_height[index] = menu_items_height_original[index];
-            menu_items_is_open[index] = true;
-            console.log(menu_items_is_open);
+        let i = ev.target.dataset.index;
+        if (menu[i].height == 0) {
+            menu[i].height = menu[i].previous_height;
+            menu[i].is_open = true;
         } else {
-            menu_items_height[index] = 0;
-            menu_items_is_open[index] = false;
-            console.log(menu_items_is_open);
+            menu[i].height = 0;
+            menu[i].is_open = false;
         }
     }
     function collapse_second_level(ev) {
-        let index = ev.target.dataset.index;
-        let index_top_level = ev.target.dataset.parent_index;
-        if (menu_items_height[index] == 0) {
-            menu_items_height[index] = menu_items_height_original[index];
-            menu_items_is_open[index] = true;
-            console.log(menu_items_is_open);
-            menu_items_height[index_top_level] += menu_items_height_original[index];
-            menu_items_height_original[index_top_level] = menu_items_height[index_top_level];
+        let i = ev.target.dataset.index;
+        let i_parent = ev.target.dataset.parent_index;
+        if (menu[i_parent].children[i].height == 0) {
+            menu[i_parent].children[i].height = menu[i_parent].children[i].previous_height;
+            menu[i_parent].children[i].is_open = true;
+            menu[i_parent].height += menu[i_parent].children[i].previous_height;
+            menu[i_parent].previous_height = menu[i_parent].height;
         } else {
-            menu_items_height[index] = 0;
-            menu_items_is_open[index] = false;
-            console.log(menu_items_is_open);
-            menu_items_height[index_top_level] -= menu_items_height_original[index];
-            menu_items_height_original[index_top_level] = menu_items_height[index_top_level];
+            menu[i_parent].children[i].height = 0;
+            menu[i_parent].children[i].is_open = false;
+            menu[i_parent].height -= menu[i_parent].children[i].previous_height;
+            menu[i_parent].previous_height = menu[i_parent].height;
         }
     }
 </script>
@@ -60,22 +47,20 @@
     {#each menu as menu_top_level, menu_top_level_index}
         <li>
             <div class="menu-item-with-arrow">
-                <span data-index="id-{menu_top_level_index}" on:click={collapse_top_level}>{menu_top_level.name}</span>
-                <span class="arrow_closed" class:arrow={menu_items_is_open["id-" + menu_top_level_index] === true} />
+                <span data-index={menu_top_level_index} on:click={collapse_top_level}>{menu_top_level.name}</span>
+                <span class="arrow_closed" class:arrow={menu[menu_top_level_index].is_open === true} />
             </div>
-            <ul id="id-{menu_top_level_index}" style="height:{menu_items_height['id' + '-' + menu_top_level_index]}px">
+            <ul id="id-{menu_top_level_index}" style="height:{menu[menu_top_level_index].height}px">
                 {#each menu_top_level.children as menu_second_level, menu_second_level_index}
                     <li>
                         <span
-                            data-index="id-{menu_top_level_index}-{menu_second_level_index}"
-                            data-parent_index="id-{menu_top_level_index}"
+                            data-index={menu_second_level_index}
+                            data-parent_index={menu_top_level_index}
                             on:click={collapse_second_level}>{menu_second_level.name}</span
                         >
                         <ul
                             id="id-{menu_top_level_index}-{menu_second_level_index}"
-                            style="height:{menu_items_height[
-                                'id' + '-' + menu_top_level_index + '-' + menu_second_level_index
-                            ]}px"
+                            style="height:{menu[menu_top_level_index].children[menu_second_level_index].height}px"
                         >
                             {#each menu_second_level.children as menu_third_level, menu_third_level_index}
                                 <li id="id-{menu_top_level_index}-{menu_second_level_index}-{menu_third_level_index}">
