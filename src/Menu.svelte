@@ -22,6 +22,8 @@
         // console.log(menu);
         // console.log(menu_items_height_original);
         console.log(menu_items_is_open);
+        menu_items_height["id-1"] = 0;
+        menu_items_is_open["id-1"] = false;
     });
     function collapse_top_level(ev) {
         let index = ev.target.dataset.index;
